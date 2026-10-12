@@ -8,12 +8,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-nexus-dome-smart-platform-key-993821')
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = [
-    ".up.railway.app",
-    "127.0.0.1",
-    "localhost",
-    "testserver",
-]
+allowed_hosts_cfg = config('ALLOWED_HOSTS', default='*')
+ALLOWED_HOSTS = [h.strip() for h in allowed_hosts_cfg.split(',') if h.strip()]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -75,9 +71,11 @@ TEMPLATES = [
     },
 ]
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://*.up.railway.app",
-]
+csrf_trusted_cfg = config(
+    'CSRF_TRUSTED_ORIGINS',
+    default='https://*.up.railway.app,https://*.onrender.com,https://*.vercel.app,http://localhost:5173,http://127.0.0.1:5173'
+)
+CSRF_TRUSTED_ORIGINS = [h.strip() for h in csrf_trusted_cfg.split(',') if h.strip()]
 
 WSGI_APPLICATION = 'smartnest.wsgi.application'
 ASGI_APPLICATION = 'smartnest.asgi.application'
