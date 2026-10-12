@@ -173,7 +173,7 @@ export default function Dashboard() {
   };
   const unlockGate = () => sendCommand('unlock_door');
 
-  const isOnline = lastSeenAt !== null && (now - lastSeenAt) < OFFLINE_THRESHOLD_MS;
+  const isOnline = (device && device.is_online) || (lastSeenAt !== null && (now - lastSeenAt) < OFFLINE_THRESHOLD_MS);
 
   if (loading) return <div className="sn-page-loading">Loading dashboard…</div>;
 

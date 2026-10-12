@@ -309,6 +309,38 @@ export default function Login() {
               <button className="saas-btn" disabled={busy} style={{ marginTop: '8px' }}>
                 {busy ? 'SYNCHRONIZING...' : mode === 'login' ? 'INITIALIZE SESSION' : 'PROVISION PROFILE'}
               </button>
+
+              {/* Quick Demo Login Button */}
+              {mode === 'login' && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUsername('adi');
+                    setPassword('admin123');
+                    login('adi', 'admin123').then(() => navigate('/')).catch((err) => setError('Ensure backend is running on port 8000'));
+                  }}
+                  style={{
+                    width: '100%',
+                    background: 'rgba(198, 129, 63, 0.12)',
+                    border: '1px solid rgba(224, 168, 104, 0.4)',
+                    color: '#E0A868',
+                    padding: '12px',
+                    borderRadius: '8px',
+                    fontFamily: 'JetBrains Mono, monospace',
+                    fontSize: '0.85rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    marginTop: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    transition: 'all 0.2s',
+                  }}
+                >
+                  ⚡ ONE-CLICK DEMO ACCESS (adi / admin123)
+                </button>
+              )}
             </form>
 
             {/* Footer Switcher */}

@@ -12,6 +12,7 @@ ALLOWED_HOSTS = [
     ".up.railway.app",
     "127.0.0.1",
     "localhost",
+    "testserver",
 ]
 
 INSTALLED_APPS = [
@@ -81,24 +82,40 @@ CSRF_TRUSTED_ORIGINS = [
 WSGI_APPLICATION = 'smartnest.wsgi.application'
 ASGI_APPLICATION = 'smartnest.asgi.application'
 
-DATABASES = {
-    'default': dj_database_url.parse(config('DATABASE_URL'))
-}
+_db_url = config('DATABASE_URL')
+if _db_url.startswith('sqlite'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+        'default': dj_database_url.parse(_db_url)
+    }
 
 REDIS_URL = config('REDIS_URL', default='redis://127.0.0.1:6379/0')
+USE_REDIS = config('USE_REDIS', default=False, cast=bool)
 
-
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [{
-                "address": REDIS_URL,
-                "protocol": 2,   # <-- force RESP2, avoids the RESP3 bug
-            }],
+if USE_REDIS:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [{
+                    "address": REDIS_URL,
+                    "protocol": 2,   # <-- force RESP2, avoids the RESP3 bug
+                }],
+            },
         },
-    },
-}
+    }
+else:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer"
+        }
+    }
 
 CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
 CELERY_TIMEZONE = 'Asia/Kolkata'
