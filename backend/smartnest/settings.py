@@ -5,8 +5,8 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', default=False, cast=bool)
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-nexus-dome-smart-platform-key-993821')
+DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = [
     ".up.railway.app",
@@ -82,7 +82,7 @@ CSRF_TRUSTED_ORIGINS = [
 WSGI_APPLICATION = 'smartnest.wsgi.application'
 ASGI_APPLICATION = 'smartnest.asgi.application'
 
-_db_url = config('DATABASE_URL')
+_db_url = config('DATABASE_URL', default='sqlite:///db.sqlite3')
 if _db_url.startswith('sqlite'):
     DATABASES = {
         'default': {

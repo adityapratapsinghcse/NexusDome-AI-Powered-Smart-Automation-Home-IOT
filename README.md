@@ -250,22 +250,23 @@ REDIS_URL=redis://127.0.0.1:6379/0
 FIREBASE_CREDENTIALS_JSON={}
 ```
 
-Run
+Run Database Migrations & Seed Demo Data:
 
 ```bash
+# 1. Apply database tables
 python manage.py migrate
 
-python manage.py createsuperuser
+# 2. Populate complete realistic demo/test data (Users, Devices, Sensors, Energy, RFID Cards)
+python seed_demo_data.py
 
+# 3. Start Django API server
 python manage.py runserver
 ```
 
-Run Celery
-
+*(Optional)* Run Live ESP32 Hardware Telemetry Simulator:
 ```bash
-celery -A smartnest worker --loglevel=info
-
-celery -A smartnest beat --loglevel=info
+# In a separate terminal, to stream live telemetry (temperature, current, gas, distance)
+python simulate_esp32.py
 ```
 
 ---
@@ -280,15 +281,22 @@ npm install
 npm run dev
 ```
 
-Create
-
-```
-web/.env
-```
+Create `web/.env`:
 
 ```env
-VITE_API_BASE_URL=http://localhost:8000
+VITE_API_BASE_URL=http://127.0.0.1:8000
+VITE_WS_BASE_URL=ws://127.0.0.1:8000
 ```
+
+### 🔑 Demo Login Credentials
+| Username | Password | Role | Permissions |
+|---|---|---|---|
+| `adi` | `admin123` | Owner | Full access to all devices, relays, RFID cards & settings |
+| `priya` | `admin123` | Admin | Management & member access |
+| `rohan` | `admin123` | Member | Standard telemetry & climate monitoring |
+
+*Note: You can also click the **"⚡ ONE-CLICK DEMO ACCESS"** button directly on the login page.*
+
 
 ---
 
